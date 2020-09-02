@@ -1,0 +1,101 @@
+<style>
+  .cell {
+    width: 100px;
+    height: 100px;
+    background-color: aquamarine;
+    display: inline-block;
+    border: solid 1px white;
+    vertical-align: middle;
+
+    text-align: center;
+    line-height: 100px;
+    font-size: 50px;
+  }
+</style>
+
+<div id="board"></div>
+
+<script>
+  let pattern = [
+    [0, 2, 0],
+    [0, 1, 0],
+    [0, 0, 0]
+  ]
+
+  // board size
+  const size = 3
+  // player
+  let player = 1
+
+  function show() {
+    let board = document.getElementById('board')
+    board.innerHTML = ''
+
+    for(let i = 0; i < size; i++) {
+      for(let j = 0; j < size; j++) {
+        let cell = document.createElement('div')
+        cell.classList.add('cell')
+        cell.innerText = pattern[i][j] === 1 ? '⭕' : pattern[i][j] === 2 ? '❌' : ''
+        cell.addEventListener('click', () => move(j, i))
+        board.appendChild(cell)
+      }
+      board.appendChild(document.createElement('br'))
+    }
+  }
+  
+  function move(x, y) {
+    pattern[y][x] = player
+    if(checkWin(x, y)) alert(player === 1 ? '⭕ won the game' : '❌ won the game')
+    player = 3 - player // swap players
+    show()
+  }
+
+  function checkWin(x, y) {
+    // check row
+    {
+      let win = true
+      for(let i = 0; i < 3; i++) {
+        if(pattern[i][x] !== player) {
+          win = false
+          break
+        }
+      }
+      if(win) return true
+    }
+    // check column
+    {
+      let win = true
+      for(let j = 0; j < 3; j++) {
+        if(pattern[y][j] !== player) {
+          win = false
+          break
+        }
+      }
+      if(win) return true
+    }
+    // check diagonal
+    {
+      if (x + y === 1 || x + y === 3) return false
+      let win = true
+      for(let i = 0; i < 3; i++) {
+        if (pattern[i][i] !== player) {
+          win = false
+          break
+        }
+      }
+      if (win) return true
+      win = true
+      for (let i = 0; i < 3; i++) {
+        if (pattern[i][3-i] !== player) {
+          win = false
+          break
+        }
+      }
+      return win
+    }
+
+  }
+
+  show()
+
+</script>
