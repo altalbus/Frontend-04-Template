@@ -32,19 +32,29 @@
         let cell = document.createElement('div')
         cell.classList.add('cell')
         cell.innerText = pattern[i * 3 + j] === 1 ? '⭕' : pattern[i * 3 + j] === 2 ? '❌' : ''
-        cell.addEventListener('click', () => move(j, i))
+        cell.addEventListener('click', () => userMove(j, i))
         board.appendChild(cell)
       }
       board.appendChild(document.createElement('br'))
     }
   }
   
-  function move(x, y) {
+  function userMove(x, y) {
     pattern[y * 3 + x] = player
     if(checkWin(x, y, pattern, player)) alert(player === 1 ? '⭕ won the game' : '❌ won the game')
     player = 3 - player // swap players
-    //if(willWin(pattern, player)) console.log(player === 1 ? '⭕ will win the game' : '❌ will win the game')
-    console.log(bestChoice(pattern, player))
+    show()
+    computerMove()
+  }
+
+  function computerMove() {
+    const choice = bestChoice(pattern, player)
+    if (choice.point) {
+      [x, y] = choice.point
+      pattern[y * 3 + x] = player
+      if(checkWin(x, y, pattern, player)) alert(player === 1 ? '⭕ won the game' : '❌ won the game')
+    }
+    player = 3 - player // swap players
     show()
   }
 
